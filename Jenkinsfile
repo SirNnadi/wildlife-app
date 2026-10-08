@@ -34,9 +34,12 @@ pipeline {
         stage('Run Container') {
             steps {
                 sh 'docker rm -f wildlife-test || true'
-                sh 'docker run -d --name wildlife-test -p 4173:4173 ${DOCKER_REPO}:${IMAGE_TAG}'
+                sh 'docker run -d --name wildlife-test ${DOCKER_REPO}:${IMAGE_TAG}'
                 sh 'sleep 5'
-                sh 'curl -f http://localhost:4173/health || exit 1'
+                sh '''
+                    IP=$(docker inspect -f \'{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}\' wildlife-test)
+                    curl -f http://$IP:4173/health || exit 1
+                '''
                 sh 'docker stop wildlife-test && docker rm wildlife-test'
             }
         }
