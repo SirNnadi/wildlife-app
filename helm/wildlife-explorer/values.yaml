@@ -22,10 +22,6 @@ podSecurityContext: {}
 
 securityContext: {}
 
-service:
-  type: LoadBalancer
-  port: 4173
-
 autoscaling:
   enabled: false
   minReplicas: 1
