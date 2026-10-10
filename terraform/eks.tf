@@ -1,7 +1,7 @@
 resource "aws_eks_cluster" "main" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_cluster.arn
-  version  = "1.31"
+  version  = var.kubernetes_version
 
   vpc_config {
     subnet_ids = aws_subnet.public[*].id
@@ -19,8 +19,8 @@ resource "aws_eks_node_group" "main" {
 
   scaling_config {
     desired_size = var.node_count
-    min_size     = 1
-    max_size     = 3
+    min_size     = var.min_node_count
+    max_size     = var.max_node_count
   }
 
   depends_on = [
