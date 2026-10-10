@@ -1,0 +1,33 @@
+replicaCount: 2
+
+image:
+  repository: 068704208379.dkr.ecr.us-east-1.amazonaws.com/wildlife-app
+  pullPolicy: IfNotPresent
+  tag: "v1"
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+namespace:
+  create: true
+  name: staging
+
+loadBalancer:
+  enabled: true
+  port: 4173
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internet-facing
+    service.beta.kubernetes.io/aws-load-balancer-type: external
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
+
+configMap:
+  port: 4173
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 2Gi
+  storageClass: "gp2"
