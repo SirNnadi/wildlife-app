@@ -55,13 +55,3 @@ persistence:
   accessMode: ReadWriteOnce
   size: 1Gi
   storageClass: "gp2"
-
-secretStore:
-  enabled: true
-  region: us-east-1
-
-externalSecret:
-  enabled: true
-  refreshInterval: 1h
-  targetSecret: wildlife-secret
-  data: []

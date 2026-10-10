@@ -55,7 +55,7 @@ Create the name of the service account to use
 */}}
 {{- define "wildlife-explorer.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "wildlife-explorer.fullname" .) .Values.serviceAccount.name }}
+{{- default (printf "%s-sa" (include "wildlife-explorer.fullname" .)) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
