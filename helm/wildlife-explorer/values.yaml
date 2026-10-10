@@ -47,6 +47,9 @@ loadBalancer:
   port: 4173
   annotations: {}
 
+configMap:
+  port: 4173
+
 persistence:
   enabled: true
   accessMode: ReadWriteOnce
