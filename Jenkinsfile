@@ -78,7 +78,6 @@ pipeline {
                         helm upgrade --install $HELM_RELEASE $HELM_CHART \
                             -f $HELM_VALUES \
                             --namespace $K8S_NAMESPACE \
-                            --create-namespace \
                             --set image.tag=$IMAGE_TAG \
                             --wait --timeout 3m
                     '''
