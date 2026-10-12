@@ -37,6 +37,43 @@ resource "aws_iam_role_policy_attachment" "alb_controller" {
   policy_arn = "arn:aws:iam::068704208379:policy/AWSLoadBalancerControllerIAMPolicy"
 }
 
+resource "aws_iam_user" "jenkins" {
+  name = "jenkins-cicd"
+}
+
+resource "aws_iam_policy" "jenkins_cicd" {
+  name = "JenkinsCICDPolicy"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload",
+          "ecr:PutImage",
+          "ecr:BatchGetImage",
+          "ecr:GetDownloadUrlForLayer"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect   = "Allow"
+        Action   = ["eks:DescribeCluster"]
+        Resource = "arn:aws:eks:${var.region}:068704208379:cluster/${var.cluster_name}"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_user_policy_attachment" "jenkins_cicd" {
+  user       = aws_iam_user.jenkins.name
+  policy_arn = aws_iam_policy.jenkins_cicd.arn
+}
+
 resource "aws_iam_role" "eks_cluster" {
   name = "${var.cluster_name}-cluster-role"
   assume_role_policy = jsonencode({
