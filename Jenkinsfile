@@ -55,14 +55,17 @@ pipeline {
 
         stage('Health Check') {
             steps {
-                sh 'docker rm -f wildlife-test || true'
-                sh 'docker run -d --name wildlife-test --platform linux/amd64 $IMAGE_URI'
-                sh 'sleep 5'
-                sh '''
-                    IP=$(docker inspect -f \'{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}\' wildlife-test)
-                    curl -f http://$IP:4173/health || exit 1
-                '''
-                sh 'docker stop wildlife-test && docker rm wildlife-test'
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+                    sh 'aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY'
+                    sh 'docker rm -f wildlife-test || true'
+                    sh 'docker run -d --name wildlife-test --platform linux/amd64 $IMAGE_URI'
+                    sh 'sleep 5'
+                    sh '''
+                        IP=$(docker inspect -f \'{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}\' wildlife-test)
+                        curl -f http://$IP:4173/health || exit 1
+                    '''
+                    sh 'docker stop wildlife-test && docker rm wildlife-test'
+                }
             }
         }
 
