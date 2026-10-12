@@ -11,8 +11,8 @@ pipeline {
         AWS_REGION   = 'us-east-1'
         CLUSTER_NAME = 'wildlife-eks-prod'
         HELM_RELEASE = 'wildlife-explorer'
-        HELM_CHART   = 'helm/wildlife-explorer/wildlife-explorer'
-        HELM_VALUES  = 'helm/wildlife-explorer/wildlife-explorer/env/values-prod.yaml'
+        HELM_CHART   = 'helm/wildlife-explorer'
+        HELM_VALUES  = 'helm/wildlife-explorer/env/values-prod.yaml'
         K8S_NAMESPACE = 'production'
     }
 
